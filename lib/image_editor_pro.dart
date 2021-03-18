@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -181,10 +182,11 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                   screenshotController
                       .capture(
                           delay: Duration(milliseconds: 500), pixelRatio: 1.5)
-                      .then((File image) async {
+                      .then((Uint8List imageData) async {
                     //print("Capture Done");
 
                     final paths = await getExternalStorageDirectory();
+                    final image = File.fromRawPath(imageData);
                     await image.copy(paths.path +
                         '/' +
                         DateTime.now().millisecondsSinceEpoch.toString() +
