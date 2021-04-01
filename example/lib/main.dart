@@ -19,10 +19,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  File _image;
+  File? _image;
 
-  Future<void> getimageditor() =>
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
+  Future<void> getimageditor() => Navigator.push(context, MaterialPageRoute(builder: (context) {
         return ImageEditorPro(
           appBarColor: Colors.blue,
           bottomBarColor: Colors.blue,
@@ -30,7 +29,7 @@ class _HomePageState extends State<HomePage> {
       })).then((geteditimage) {
         if (geteditimage != null) {
           setState(() {
-            _image = geteditimage;
+            _image = geteditimage as File;
           });
         }
       }).catchError((er) {
@@ -46,15 +45,13 @@ class _HomePageState extends State<HomePage> {
                 getimageditor();
               },
             ).toCenter(),
-            isFalse: Image.file(_image).toCenter())
+            isFalse: Image.file(_image!).toCenter())
         .xScaffold(
-            appBar:
-                'Image Editor Pro example'.textMaterialColorWhite().xAppBar(),
-            floatingActionButton:
-                Icons.add.xIcons().xFloationActiobButton(color: Colors.red));
+            appBar: 'Image Editor Pro example'.textMaterialColorWhite().xAppBar(),
+            floatingActionButton: Icons.add.xIcons().xFloationActiobButton(color: Colors.red));
   }
 }
 
-Widget condition({bool condtion, Widget isTue, Widget isFalse}) {
-  return condtion ? isTue : isFalse;
+Widget? condition({bool? condtion, Widget? isTue, Widget? isFalse}) {
+  return condtion! ? isTue : isFalse;
 }

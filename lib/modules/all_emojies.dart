@@ -15,7 +15,7 @@ class _EmojiesState extends State<Emojies> {
         height: 400,
         decoration: BoxDecoration(
             color: Colors.white,
-            boxShadow: [BoxShadow(blurRadius: 10.9, color: Colors.grey[400])]),
+            boxShadow: [BoxShadow(blurRadius: 10.9, color: Colors.grey[400]!)]),
         child: Column(
           children: <Widget>[
             Padding(

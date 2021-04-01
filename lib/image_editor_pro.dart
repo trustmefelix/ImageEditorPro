@@ -28,12 +28,12 @@ var howmuchwidgetis = 0;
 List multiwidget = [];
 Color currentcolors = Colors.white;
 var opicity = 0.0;
-SignatureController _controller =
-    SignatureController(penStrokeWidth: 5, penColor: Colors.green);
+SignatureController _controller = SignatureController(penStrokeWidth: 5, penColor: Colors.green);
 
 class ImageEditorPro extends StatefulWidget {
-  final Color appBarColor;
-  final Color bottomBarColor;
+  final Color? appBarColor;
+  final Color? bottomBarColor;
+
   ImageEditorPro({this.appBarColor, this.bottomBarColor});
 
   @override
@@ -51,8 +51,7 @@ class _ImageEditorProState extends State<ImageEditorPro> {
   void changeColor(Color color) {
     setState(() => pickerColor = color);
     var points = _controller.points;
-    _controller =
-        SignatureController(penStrokeWidth: 5, penColor: color, points: points);
+    _controller = SignatureController(penStrokeWidth: 5, penColor: color, points: points);
   }
 
   List<Offset> offsets = [];
@@ -66,9 +65,10 @@ class _ImageEditorProState extends State<ImageEditorPro> {
 
   final GlobalKey container = GlobalKey();
   final GlobalKey globalKey = GlobalKey();
-  File _image;
+  File? _image;
   ScreenshotController screenshotController = ScreenshotController();
-  Timer timeprediction;
+  Timer? timeprediction;
+
   void timers() {
     Timer.periodic(Duration(milliseconds: 10), (tim) {
       setState(() {});
@@ -78,7 +78,7 @@ class _ImageEditorProState extends State<ImageEditorPro> {
 
   @override
   void dispose() {
-    timeprediction.cancel();
+    timeprediction!.cancel();
 
     super.dispose();
   }
@@ -135,12 +135,10 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                                 ),
                                 TextField(
                                     controller: heightcontroler,
-                                    keyboardType:
-                                        TextInputType.numberWithOptions(),
+                                    keyboardType: TextInputType.numberWithOptions(),
                                     decoration: InputDecoration(
                                         hintText: 'Height',
-                                        contentPadding:
-                                            EdgeInsets.only(left: 10),
+                                        contentPadding: EdgeInsets.only(left: 10),
                                         border: OutlineInputBorder())),
                                 SizedBox(
                                   height: 10,
@@ -151,12 +149,10 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                                 ),
                                 TextField(
                                     controller: widthcontroler,
-                                    keyboardType:
-                                        TextInputType.numberWithOptions(),
+                                    keyboardType: TextInputType.numberWithOptions(),
                                     decoration: InputDecoration(
                                         hintText: 'Width',
-                                        contentPadding:
-                                            EdgeInsets.only(left: 10),
+                                        contentPadding: EdgeInsets.only(left: 10),
                                         border: OutlineInputBorder())),
                               ],
                             ),
@@ -180,17 +176,13 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                 textColor: Colors.white,
                 onPressed: () {
                   screenshotController
-                      .capture(
-                          delay: Duration(milliseconds: 500), pixelRatio: 1.5)
+                      .capture(delay: Duration(milliseconds: 500), pixelRatio: 1.5)
                       .then((Uint8List imageData) async {
                     //print("Capture Done");
 
                     final paths = await getExternalStorageDirectory();
                     final image = File.fromRawPath(imageData);
-                    await image.copy(paths.path +
-                        '/' +
-                        DateTime.now().millisecondsSinceEpoch.toString() +
-                        '.png');
+                    await image.copy(paths!.path + '/' + DateTime.now().millisecondsSinceEpoch.toString() + '.png');
                     Navigator.pop(context, image);
                   }).catchError((onError) {
                     print(onError);
@@ -213,7 +205,7 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                     children: <Widget>[
                       _image != null
                           ? Image.file(
-                              _image,
+                              _image!,
                               height: height.toDouble(),
                               width: width.toDouble(),
                               fit: BoxFit.cover,
@@ -223,15 +215,13 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                         child: GestureDetector(
                             onPanUpdate: (DragUpdateDetails details) {
                               setState(() {
-                                RenderBox object = context.findRenderObject();
-                                var _localPosition = object
-                                    .globalToLocal(details.globalPosition);
-                                _points = List.from(_points)
-                                  ..add(_localPosition);
+                                final RenderBox object = context.findRenderObject()! as RenderBox;
+                                var _localPosition = object.globalToLocal(details.globalPosition);
+                                _points = List.from(_points)..add(_localPosition);
                               });
                             },
                             onPanEnd: (DragEndDetails details) {
-                              _points.add(null);
+                              _points.add(null as Offset);
                             },
                             child: Signat()),
                       ),
@@ -242,8 +232,7 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                                   left: offsets[f.key].dx,
                                   top: offsets[f.key].dy,
                                   ontap: () {
-                                    scaf.currentState
-                                        .showBottomSheet((context) {
+                                    scaf.currentState!.showBottomSheet((context) {
                                       return Sliders(
                                         size: f.key,
                                         sizevalue: fontsize[f.key].toDouble(),
@@ -253,12 +242,11 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                                   onpanupdate: (details) {
                                     setState(() {
                                       offsets[f.key] = Offset(
-                                          offsets[f.key].dx + details.delta.dx,
-                                          offsets[f.key].dy + details.delta.dy);
+                                          offsets[f.key].dx + details!.delta.dx, offsets[f.key].dy + details.delta.dy);
                                     });
                                   },
                                   value: f.value.toString(),
-                                  fontsize: fontsize[f.key].toDouble(),
+                                  fontsize: fontsize[f.key].toDouble() as double,
                                   align: TextAlign.center,
                                 )
                               : type[f.key] == 2
@@ -266,26 +254,21 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                                       left: offsets[f.key].dx,
                                       top: offsets[f.key].dy,
                                       ontap: () {
-                                        scaf.currentState
-                                            .showBottomSheet((context) {
+                                        scaf.currentState!.showBottomSheet((context) {
                                           return Sliders(
                                             size: f.key,
-                                            sizevalue:
-                                                fontsize[f.key].toDouble(),
+                                            sizevalue: fontsize[f.key].toDouble(),
                                           );
                                         });
                                       },
                                       onpanupdate: (details) {
                                         setState(() {
-                                          offsets[f.key] = Offset(
-                                              offsets[f.key].dx +
-                                                  details.delta.dx,
-                                              offsets[f.key].dy +
-                                                  details.delta.dy);
+                                          offsets[f.key] = Offset(offsets[f.key].dx + details!.delta.dx,
+                                              offsets[f.key].dy + details.delta.dy);
                                         });
                                       },
                                       value: f.value.toString(),
-                                      fontsize: fontsize[f.key].toDouble(),
+                                      fontsize: fontsize[f.key].toDouble() as double,
                                       align: TextAlign.center,
                                     )
                                   : Container();
@@ -299,15 +282,13 @@ class _ImageEditorProState extends State<ImageEditorPro> {
         bottomNavigationBar: openbottomsheet
             ? Container()
             : Container(
-                decoration: BoxDecoration(
-                    color: widget.bottomBarColor,
-                    boxShadow: [BoxShadow(blurRadius: 10.9)]),
+                decoration: BoxDecoration(color: widget.bottomBarColor, boxShadow: [BoxShadow(blurRadius: 10.9)]),
                 height: 70,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
                     BottomBarContainer(
-                      colors: widget.bottomBarColor,
+                      colors: widget.bottomBarColor!,
                       icons: FontAwesomeIcons.brush,
                       ontap: () {
                         // raise the [showDialog] widget
@@ -342,10 +323,8 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                     BottomBarContainer(
                       icons: Icons.text_fields,
                       ontap: () async {
-                        final value = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TextEditor()));
+                        final value =
+                            await Navigator.push(context, MaterialPageRoute(builder: (context) => TextEditor()));
                         if (value.toString().isEmpty) {
                           print('true');
                         } else {
@@ -415,9 +394,8 @@ class _ImageEditorProState extends State<ImageEditorPro> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          decoration: BoxDecoration(color: Colors.white, boxShadow: [
-            BoxShadow(blurRadius: 10.9, color: Colors.grey[400])
-          ]),
+          decoration:
+              BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(blurRadius: 10.9, color: Colors.grey[400]!)]),
           height: 170,
           child: Column(
             children: <Widget>[
@@ -443,11 +421,8 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                               IconButton(
                                   icon: Icon(Icons.photo_library),
                                   onPressed: () async {
-                                    var image = await picker.getImage(
-                                        source: ImageSource.gallery);
-                                    var decodedImage =
-                                        await decodeImageFromList(
-                                            File(image.path).readAsBytesSync());
+                                    var image = await picker.getImage(source: ImageSource.gallery);
+                                    var decodedImage = await decodeImageFromList(File(image!.path).readAsBytesSync());
 
                                     setState(() {
                                       height = decodedImage.height;
@@ -473,10 +448,8 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                             IconButton(
                                 icon: Icon(Icons.camera_alt),
                                 onPressed: () async {
-                                  var image = await picker.getImage(
-                                      source: ImageSource.camera);
-                                  var decodedImage = await decodeImageFromList(
-                                      File(image.path).readAsBytesSync());
+                                  var image = await picker.getImage(source: ImageSource.camera);
+                                  var decodedImage = await decodeImageFromList(File(image!.path).readAsBytesSync());
 
                                   setState(() {
                                     height = decodedImage.height;
@@ -538,9 +511,11 @@ class _SignatState extends State<Signat> {
 }
 
 class Sliders extends StatefulWidget {
-  final int size;
+  final int? size;
   final sizevalue;
-  const Sliders({Key key, this.size, this.sizevalue}) : super(key: key);
+
+  const Sliders({Key? key, this.size, this.sizevalue}) : super(key: key);
+
   @override
   _SlidersState createState() => _SlidersState();
 }
@@ -548,7 +523,7 @@ class Sliders extends StatefulWidget {
 class _SlidersState extends State<Sliders> {
   @override
   void initState() {
-    slider = widget.sizevalue;
+    slider = widget.sizevalue as double;
 
     super.initState();
   }
@@ -572,14 +547,14 @@ class _SlidersState extends State<Sliders> {
                 max: 100.0,
                 onChangeEnd: (v) {
                   setState(() {
-                    fontsize[widget.size] = v.toInt();
+                    fontsize[widget.size!] = v.toInt();
                   });
                 },
                 onChanged: (v) {
                   setState(() {
                     slider = v;
                     print(v.toInt());
-                    fontsize[widget.size] = v.toInt();
+                    fontsize[widget.size!] = v.toInt();
                   });
                 }),
           ],
